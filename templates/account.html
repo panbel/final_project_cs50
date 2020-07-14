@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+
+{% block title %}
+: Account
+{% endblock %}
+
+{% block main %}
+    <body class="actual_container">
+        <h1>Account</h1>
+        <h2>Basic User Information</h2>
+        {% if error %}
+            <p class=error><strong></strong> {{ error }}</p>
+        {% endif %}
+        <p>Username: {{ g.user[1] }}
+        <button><a href="/edit-user-info/username">Change username</a></button></p>
+        <p>Email: {{ g.user[2] }}
+        <button><a href="/edit-user-info/email">Change email</a></button></p></p>        
+        <h3>Additional User Information</h3>
+        <p>Gender: {{ user_info[1] }}
+        <button><a href="/edit-user-info/gender">Change gender</a></button></p>
+        <p>Age: {{ user_info[2] }}
+        <button><a href="/edit-user-info/age">Change age</a></button></p>
+        <p>University: {{ user_info[3] }}
+        <button><a href="/edit-user-info/university">Change university</a></button></p>
+        <p>Program: {{ user_info[4] }}
+        <button><a href="/edit-user-info/program">Change program</a></button></p>
+        <p>Έτος: {{ user_info[8] }}
+        <button><a href="/edit-user-info/etos">Change etos</a></button></p>
+        <p>Facebook: {{ user_info[5] }}
+        <button><a href="/edit-user-info/facebook">Change Facebook</a></button></p>
+        <p>Instagram: {{ user_info[6] }}
+        <button><a href="/edit-user-info/instagram">Change Instagram</a></button></p>
+        <p>Linkdin: {{ user_info[7] }}
+        <button><a href="/edit-user-info/linkdin">Change Linkdin</a></button></p>
+        <p>Contact Email: {{ user_info[9] }}
+        <button><a href="/edit-user-info/contact_email">Change contact email</a></button></p>
+        <h1>View and edit the notes you have uploaded</h1>
+        <button><a href={{ url_for("view_uploads") }}> View and edit your notes!</a></button>
+    </body>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block title %}
+: Search Results
+{% endblock %}
+
+{% block main %}
+    <body class="actual_container">
+    <div class="">
+        <h1 class="main_title" style="padding-top: 20px">Search Results</h1>
+        <ol class="query_list">
+        {% for note in query %}
+            <li class="query_item">
+                <a href="{{ url_for('note_details', note_id=note[0]) }}"><h5>{{ note[7] }}</h5></a>
+                <p>Uploaded by {{ note[22] }} on {{ note[2] }}</p>
+
+                {# <a href="{{ url_for('note_details', note_title=note[1]) }}">{{ note[1] }}</a> #}
+
+            </li>
+        {% endfor %}
+        </ol>
+    </div>
+    </body>
+{% endblock %}

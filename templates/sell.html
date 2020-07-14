@@ -1,0 +1,105 @@
+{% extends "layout.html" %}
+
+{% block title %}
+: Sell
+{% endblock %}
+
+{% block main %}
+    <body class="actual_container">
+        <h1>Sell your notes!</h1>
+        <form action="{{ url_for('sell') }}" method="POST">
+        {# action="{{ url_for('sell') }}" #}
+            {% if error %}
+                <p class=error><strong></strong> {{ error }}</p>
+            {% endif %}
+            
+            <input type="text" autocomplete="off" name="note_title" placeholder="Give a meaningfull title for you notes." style="width: 400px">
+
+            <select size="1" id="uni_choice" name="uni_choice">
+                <option value="" selected disabled hidden>Choose your university</option>
+                <option value="National_and_Kapodistrian_University_of_Athens">National and Kapodistrian University of Athens</option>
+                <option value="National_Technical_University_of_Athens">National Technical University of Athens</option>
+                <option value="Aristotle_University_of_Thessaloniki">Aristotle University of Thessaloniki</option>
+            </select>
+                    {# function showDiv(divId, element)
+                    {
+                        document.getElementById(divId).style.display = element.value != "" ? 'block' : 'none';
+                    } #}
+            {# <div id="hidden_div" style="display: none; padding-top: 20px">
+                <p>{{ e }}</p>
+                <p>{{ input_uni }}</p> #}
+            <div class="container">
+                <div class="National_and_Kapodistrian_University_of_Athens">
+                    <select name="program_choice" id="program_choice">
+                        <option value="" selected disabled hidden>Choose your program</option>
+                        <option value="BSc_Economics">BSc Economics</option>
+                        <option value="BSc_Law">BSc Law</option>
+                    </select>
+                    <input class="" type="submit" value="Next!">
+                </div>
+                <div class="National_Technical_University_of_Athens">
+                    <select name="program_choice" id="program_choice">
+                        <option value="" selected disabled hidden>Choose your program</option>
+                        <option value="BSc_Maths">BSc Maths</option>
+                        <option value="BSc_Physics">BSc Physics</option>
+                    </select>
+                    <input class="" type="submit" value="Next!">
+                </div>
+                <div class="Aristotle_University_of_Thessaloniki">
+                    <select name="program_choice" id="program_choice">
+                        <option value="" selected disabled hidden>Choose your program</option>
+                        <option value="BSc_History">BSc History</option>
+                        <option value="BSc_Economics">BSc Economics</option>
+                    </select>
+                    <input class="" type="submit" value="Next!">
+                </div>
+                {# <select name="program_choice" id="program_choice">
+                    {% if input_uni == "National and Kapodistrian University of Athens" %}
+                        <option value="BSc Economics">BSc Economics</option>
+                        <option value="BSc Law">BSc Law</option>
+                    {% elif input_uni == "National Technical University of Athens" %}
+                        <option value="BSc Maths">BSc Maths</option>
+                        <option value="BSc Physics">BSc Physics</option>
+                    {% elif input_uni == "Aristotle University of Thessaloniki" %}
+                        <option value="BSc History">BSc History</option>
+                        <option value="BSc Economics">BSc Economics</option>
+                    {% endif %}
+                </select> #}
+            </div>
+            <script>
+                $(document).ready(function() {
+                    $('#uni_choice').bind('change', function() {
+                        var elements = $('div.container').children().hide(); // hide all the elements
+                        var value = $(this).val();
+
+                        if (value.length) { // if somethings' selected
+                            elements.filter('.' + value).show(); // show the ones we want
+                        }
+                    }).trigger('change');
+                });
+            </script>
+        </form>
+        {# The dollar sign is commonly used as a shortcut to the function document.getElementById(). #}
+
+        
+
+
+        {# //     $('input[type="file"]').on('change', function () {
+        //         var reader = new FileReader();
+        //         reader.onload = function () {
+        //             var thisImage = reader.result;
+        //             localStorage.setItem("imgData", thisImage);
+        //         };
+        //         reader.readAsDataURL(this.files[0]);
+        //     });
+            
+        //     $("#notes_upload").on('click', function() {
+        //         var imgData = __CANVAS.toDataURL();
+        //         var doc = new jsPDF();
+        //         doc.addImage(imgData, 0, 0, 210, 300);
+        //         doc.save('page1.pdf');
+        //     }); #}
+        
+
+    </body>
+{% endblock %}

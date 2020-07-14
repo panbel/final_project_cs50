@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+{% block title %}
+: Home
+{% endblock %}
+
+{% block main %}
+    <body class="actual_container">
+        <div class="index_main_container">
+            <div class="title_container"><h1 class="main_title" style="font-weight: 700;">Study Notes</h1></div>
+            <div class="index_sec_container">
+                {% if error %}
+                    <p class=error> {{ error }}</p>
+                {% endif %}
+                <ol>
+                    <h3>1) Buy or sell university notes!</h3>
+                    <h3>2) Connect with other people and make new studdy buddies!</h3>
+                    <h3>3) Rise within the Study Note leaderboards!</h3>
+                </ol>
+                <a class="login-button" href={{ url_for('login') }}>Login!</a>
+                <a class="register-button" href={{ url_for('register') }}>Register!</a>
+            </div>
+        </div>
+    </body>
+{% endblock %}

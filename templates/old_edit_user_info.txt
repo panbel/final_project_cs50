@@ -1,0 +1,97 @@
+{% extends "layout.html" %}
+
+{% block title %}
+: Edit User Info
+{% endblock %}
+
+{% block main %}
+    <body class="actual_container">
+        <h1>Add or Edit your information</h1>
+        <h2>Your user Information</h2>
+        {% if error %}
+            <p class=error><strong></strong> {{ error }}</p>
+        {% endif %}
+
+        <form action="{{ url_for('edit_user_info') }}" method="POST">
+            <p>Username: {{ g.user[1] }}<input type="text" autocomplete="off" name="username" placeholder=" New Username">           
+            <input class="" name="username_submit" type="submit" value="Update username"></p>
+        </form>
+
+        <form action="{{ url_for('edit_user_info') }}" method="POST">
+            <p>Email (private): {{ g.user[2] }}<input type="email" autocomplete="off" name="email" placeholder="New Email">
+            {# TODO:check if the email is taken           #}
+            <input class="" name="email_submit" type="submit" value="Update personal email"></p>
+        </form>
+        {# add a hover for the email saying that only you can see this #}
+
+        <form action="{{ url_for('edit_user_info') }}" method="POST">
+            <p>Gender: {{ user_info[1] }}
+            <select size="1" id="gender_choice" name="gender_choice">
+                <option value="" selected disabled hidden>Choose your gender</option>
+                <option value="Female">Female</option>
+                <option value="Male">Male</option>
+                <option value="Other">Other</option>
+            </select><input class="" type="submit" value="Update personal email"></p>
+        </form>
+
+        <form action="{{ url_for('edit_user_info') }}" method="POST">
+            <p>Age: {{ user_info[2] }} 
+            <select name="age_choice" id="age_choice">
+                <option value="" selected disabled hidden>Choose your age</option>
+                {% for age in range(1, 100) %}
+                    <option value="{{ age }}">{{ age }}</option>
+                {% endfor %}
+            </select>
+            <input class="" type="submit" value="Update age"></p>
+        </form>
+
+        <form action="{{ url_for('edit_user_info') }}" method="POST">
+            <p>University: {{ user_info[3] }}
+            <select name="uni_choice" id="uni_choice">
+                <option value="" selected disabled hidden>Choose your University</option>
+                <option value="National_and_Kapodistrian_University_of_Athens">National and Kapodistrian University of Athens</option>
+                <option value="National_Technical_University_of_Athens">National Technical University of Athens</option>
+                <option value="Aristotle_University_of_Thessaloniki">Aristotle University of Thessaloniki</option>
+            </select>
+            <input class="" type="submit" value="Update university"></p>
+        </form>
+
+        <form action="{{ url_for('edit_user_info') }}" method="POST">
+            <p>Program: {{ user_info[4] }}<input type="text" autocomplete="off" name="program" placeholder="i.e. BSc Economics">
+            <input class="" type="submit" value="Update university"></p>
+        </form>
+
+        <form action="{{ url_for('edit_user_info') }}" method="POST">
+            <p>Έτος: {{ user_info[8] }}
+            <select name="etos_choice" id="etos_choice">
+                <option value="" selected disabled hidden>Se poio etos hste sto panepistimio?</option>
+                {% for age in range(1, 20) %}
+                    <option value="{{ age }}">{{ age }}</option>
+                {% endfor %}
+            </select>
+            <input class="" type="submit" value="Update etos"></p>
+        </form>
+
+        <form action="{{ url_for('edit_user_info') }}" method="POST">
+            <p>Facebook: {{ user_info[5] }}<input type="text" autocomplete="off" name="facebook" placeholder="Facebook name">
+            <input class="" type="submit" value="Update facebook name"></p>
+        </form>
+
+        <form action="{{ url_for('edit_user_info') }}" method="POST">
+            <p>Instagram: {{ user_info[6] }}<input type="text" autocomplete="off" name="instagram" placeholder="Instagram username">
+            <input class="" type="submit" value="Update instagram username"></p>
+        </form>
+
+        <form action="{{ url_for('edit_user_info') }}" method="POST">
+            <p>Linkdin: {{ user_info[7] }}<input type="text" autocomplete="off" name="linkdin" placeholder="Linkdin username">
+            <input class="" type="submit" value="Update Linkdin username"></p>
+        </form>
+
+        <form action="{{ url_for('edit_user_info') }}" method="POST">
+            <p>Contact Email: {{ user_info[9] }}<input type="email" autocomplete="off" name="contact_email" placeholder="Contact email">
+            <input class="" type="submit" value="Update contact email"></p>
+        </form>
+        {# todo: check if email is taken #}
+        {# add a hover for the email saying that only you can see this #}
+</body>
+{% endblock %}

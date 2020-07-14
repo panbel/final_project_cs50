@@ -1,0 +1,69 @@
+{% extends "layout.html" %}
+
+{% block title %}
+: Sell
+{% endblock %}
+
+{% block main %}
+    <body class="actual_container">
+        <h1>Search for notes!</h1>
+
+        <form action="{{ url_for('search') }}" method="POST">
+            <h2>Insert your criteria</h2>
+            {% if error %}
+                <p class=error><strong></strong> {{ error }}</p>
+            {% endif %}
+
+            <input type="text" autocomplete="off" name="notes_title_input" placeholder="Title of notes"></p>
+            <select size="1" id="uni_choice" name="uni_choice">
+                <option value="" selected disabled hidden>Choose your university</option>
+                <option value="any">Any university</option>
+                <option value="National_and_Kapodistrian_University_of_Athens">National and Kapodistrian University of Athens</option>
+                <option value="National_Technical_University_of_Athens">National Technical University of Athens</option>
+                <option value="Aristotle_University_of_Thessaloniki">Aristotle University of Thessaloniki</option>
+            </select>
+            <div class="container">
+                <div class="any_university">
+                    <input type="text" autocomplete="off" name="program_choice_manual" id="program_choice_manual" placeholder="Choose the name of a program i.e. Economics">
+                </div>
+                <div class="National_and_Kapodistrian_University_of_Athens">
+                    <select name="program_choice" id="program_choice">
+                        <option value="" selected disabled hidden>Choose your program</option>
+                        <option value="any">Any program</option>
+                        <option value="BSc_Economics">BSc Economics</option>
+                        <option value="BSc_Law">BSc Law</option>
+                    </select>
+                </div>
+                <div class="National_Technical_University_of_Athens">
+                    <select name="program_choice" id="program_choice">
+                        <option value="" selected disabled hidden>Choose your program</option>
+                        <option value="any">Any program</option>
+                        <option value="BSc_Maths">BSc Maths</option>
+                        <option value="BSc_Physics">BSc Physics</option>
+                    </select>
+                </div>
+                <div class="Aristotle_University_of_Thessaloniki">
+                    <select name="program_choice" id="program_choice">
+                        <option value="" selected disabled hidden>Choose your program</option>
+                        <option value="any">Any program</option>
+                        <option value="BSc_History">BSc History</option>
+                        <option value="BSc_Economics">BSc Economics</option>
+                    </select>
+                </div>
+            </div>
+            <script>
+                $(document).ready(function() {
+                    $('#uni_choice').bind('change', function() {
+                        var elements = $('div.container').children().hide(); // hide all the elements
+                        var value = $(this).val();
+
+                        if (value.length) { // if somethings' selected
+                            elements.filter('.' + value).show(); // show the ones we want
+                        }
+                    }).trigger('change');
+                });
+            </script>
+            <input class="" type="submit" value="Search!">
+        </form>
+    </body>
+{% endblock %}

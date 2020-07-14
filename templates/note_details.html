@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+
+{% block title %}
+: Book Details
+{% endblock %}
+
+{% block main %}
+    <body class="actual_container">
+    <div class="book_details_container">
+        <h1 class="main_title" style="padding-top: 30px">Detailed information for: {{ note_details[7] }}</h1>  <!--title-->
+        <p style="padding-top: 30px"></p>
+        <div class="" style="padding: 30px;">
+            <p>Author: {{ note_details[22] }} </p>
+            {# TODO: add a link which takes you to the Authors profile! #}
+            <p>Upload date: {{ note_details[2] }}</p>
+            <p>Average rating: {{ average_review_score }}/5</p>
+            <p>Number of reviews received: {{ num_of_reviews }}</p>
+            {# TODO: <p>Downloads: {{ advanced_details["books"][0]["work_ratings_count"] }}</p> #}
+        </div>
+        <p style="padding-top: 30px"></p>
+
+        <h3 class="secondary_title">Submit a review</h3>
+        <div class="fieldset_container">
+        <fieldset>
+            <form action="{{ url_for('note_details', note_id=note_details[0]) }}" method="POST">
+                <div class="choose_rating">
+                    Rating:
+                    <select class="star_choice" name="rating" required class="choose_rating">
+                        <option value="" selected disabled hidden>Choose here</option>
+                        <option value="1">1 star</option>
+                        <option value="2">2 star</option>
+                        <option value="3">3 star</option>
+                        <option value="4">4 star</option>
+                        <option value="5">5 star</option>
+                    </select><br>
+                </div>
+                <p style="padding-top: 10px"></p>
+                <textarea name="opinion" placeholder="Write your book review here."rows="12" cols="30"></textarea><br>
+                <input class="submit_review_button" type="submit" value="Submit!">
+            </form>
+        </fieldset>
+        </div>
+        <p style="padding-top: 20px"></p>
+        <h3 class="secondary_title">Reviews from other people</h3>
+        <div class="other_reviews">
+            {% for review in reviews %}
+            <div class="individual_review">
+                <h5>User "{{ review[4] }}" rated the notes with {{ review[5] }} /5.</h5>
+                {# To say if the user has "bought" or "not bought" these specific notes #}
+                <p>{{ review[4] }} has {{ review[6] }} these specific notes!</p>
+
+                {# If the reviewer wrote a review.. include it #}
+                <div>
+                    {% if review[7] %}
+                        <p>"{{ review[7] }}"</p>  
+                    {% endif %} 
+                </div>
+                <p style="font-size:13pt">{{ review[3] }}</p>
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+    </body>
+{% endblock %}
