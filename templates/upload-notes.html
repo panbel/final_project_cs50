@@ -5,12 +5,19 @@
 {% endblock %}
 
 {% block main %}
-    <body class="actual_container">
-        <h1>Upload your notes!</h1>
-        <form method=post enctype=multipart/form-data>
-            <input type=file name=file>
-            <input type=submit value=Upload>
-        </form>
-
+    <body class="upload_notes_container">
+        <div class="first_container">
+            <div class="text_inside">
+                <h1>Upload your notes!</h1>
+                <p style="padding-top: 10px;"></p>
+                <form method=post enctype=multipart/form-data>
+                    <div class="custom_file_upload">
+                        <input type=file name=file>
+                    </div>
+                    <p style="padding-top: 15px;"></p>
+                    <input type=submit value=Upload class="upload_button">
+                </form>
+            </div>
+        </div>
     </body>
 {% endblock %}

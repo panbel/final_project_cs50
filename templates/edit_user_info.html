@@ -5,15 +5,18 @@
 {% endblock %}
 
 {% block main %}
-<body class="actual_container">
-    <h1>Add or edit your information</h1>
-    {% if error %}
-        <p class=error><strong></strong> {{ error }}</p>
-    {% endif %}
+<body class="edit_user_info_container">
+    <div class="text_inside">
+        <p class="main_title">Add or edit your information</p>
+        {% if error %}
+            <p class=error><strong></strong> {{ error }}</p>
+        {% endif %}
 
-    <form action="{{ url_for('edit_variable', variable=variable) }}" method="POST">
-        <p>Current {{variable}}: {{ old_variable }} <input type="text" autocomplete="off" name={{ variable }} placeholder="New {{ variable }}">           
-        <input class="" name="username_submit" type="submit" value="Update {{ variable }}!"></p>
-    </form>
+        <form action="{{ url_for('edit_variable', variable=variable) }}" method="POST">
+            <p>Current {{variable}}: {{ old_variable }} <input type="text" autocomplete="off" name={{ variable }} placeholder="New {{ variable }}">           
+            <p style="padding-top: 10px;"></p>
+            <input class="update_button" name="username_submit" type="submit" value="Update {{ variable }}!"></p>
+        </form>
+    </div>
 </body>
 {% endblock %}

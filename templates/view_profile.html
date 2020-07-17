@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+
+{% block title %}
+: View Profile - {{ user_info[10] }}
+{% endblock %}
+
+{% block main %}
+    <body class="view_profile">
+        <div class="view_profile_first_container">
+        <h1 class="main_title">User profile of {{ user_info[10] }}</h1>
+        <!-- Todo: have an option to sort by popularity or average review score -->
+            {% if error %}
+                <p class=error><strong></strong> {{ error }}</p>
+            {% endif %}
+            <div>
+                <p class="main_info">Average review score: {{ reviews_info[0] }}</p>
+                <p class="main_info">Number of reviews received: {{ reviews_info[1] }}</p>
+                <p class="main_info">Number of notes published: {{ number_of_notes_uploaded }}</p>
+                <p>Gender: {{ user_info[1] }}</p>
+                <p>Age: {{ user_info[2] }}</p>
+                <p>University: {{ user_info[3] }}</p>
+                <p>Program: {{ user_info[4] }}</p>
+                <p>Etos sxolis: {{ user_info[8] }}</p>
+                <p>Facebook: {{ user_info[5] }}</p>
+                <p>Instagram: {{ user_info[6] }}</p>
+                <p>Linkdin: {{ user_info[7] }}</p>
+                <p>Contact email: {{ user_info[9] }}</p>
+            </div>
+        </div>
+        <p style="padding-top: 10px;"></p>
+        <div class="view_profile_second_container">
+            <ol>
+                <h3>Notes published</h3>
+                {% for note in notes_info %}
+                <div class="main_info">
+                    <li>
+                        <a href="{{ url_for('note_details', note_id=note[0]) }}">{{ note[5] }}</a>
+                        <p class="small_text">Uploaded on {{ note[1] }} for the program: {{ note[4] }} of {{ note[3] }}</p>
+                    </li>
+                </div>    
+                {% endfor %}
+            </ol>
+        </div>
+    </body>
+{% endblock %}

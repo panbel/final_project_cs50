@@ -11,14 +11,14 @@
             {% for note in notes_uploaded %}                
                 <p id="output"></p>
                 <p id="file_path"></p>
-                {# <li>Filename: {{ note[3] }}. Uploaded on {{ note[2] }} for the program: {{ note[5] }} of {{ note[4] }} <button type="submit" onclick="window.open({{ note[3] }})">View!</button></li> #}
+                <!-- <li>Filename: {{ note[3] }}. Uploaded on {{ note[2] }} for the program: {{ note[5] }} of {{ note[4] }} <button type="submit" onclick="window.open({{ note[3] }})">View!</button></li> -->
                 <li>Filename: {{ note[3] }}. Uploaded on {{ note[2] }} for the program: {{ note[5] }} of {{ note[4] }} <button type="submit" onclick="window.open(' {{note[6]}} ')">Download file!</button></li>
-                {# <a href="static\notes\National_and_Kapodistrian_University_of_Athens\BSc_Economics\2.pdf" download={{ note[3] }}></a>Download file!</button></li> #}
+                <!-- <a href="static\notes\National_and_Kapodistrian_University_of_Athens\BSc_Economics\2.pdf" download={{ note[3] }}></a>Download file!</button></li> -->
                 {# type="submit" onclick="window.open('static/notes/' + {{ note[4] }} + '/' + {{ note[5] }} + '/' + {{ note[3] }} )" #}
             {% endfor %}
         </ol>
         <script>
-            var file_path = 'static/notes/', note[4], note[5], note[3]);
+            var file_path = ('static/notes/', note[4], note[5], note[3]);
             document.getElementById('output').innerHTML = "hello";
             document.getElementByUD("file_path").innerHTML = file_path;
             // var file_path == os.path.join('static/notes/', note[4], note[5], note[3])

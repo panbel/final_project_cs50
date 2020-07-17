@@ -1,20 +1,20 @@
 {% extends "layout.html" %}
 
 {% block title %}
-: Search
+: Leaderboards
 {% endblock %}
 
 {% block main %}
-    <body class="search_main_container">
-    <div class="search_container">
-        <h1 class="main_title">Search for notes!</h1>
-        <form action="{{ url_for('search') }}" method="POST" class="search_text">
-            <h2 style="font-family: 'Annie Use Your Telescope', cursive, Arial;">Insert your criteria</h2>
+    <body class="leaderboard_filter_container">
+    <div class="first_container">
+        <div class="text_inside">
+            <h1>Leaderboard of sellers</h1>
+            <!-- Todo: have an option to sort by popularity or average review score -->
+            <h3>Insert your filter criteria</h3>
             {% if error %}
                 <p class=error><strong></strong> {{ error }}</p>
             {% endif %}
-            <div class="select_search_query">
-                <input type="text" autocomplete="off" name="notes_title_input" placeholder="Title of notes"></p>
+            <form action="{{ url_for('leaderboard_filter') }}" method="POST">
                 <select size="1" id="uni_choice" name="uni_choice">
                     <option value="" selected disabled hidden>Choose your university</option>
                     <option value="any">Any university</option>
@@ -23,10 +23,8 @@
                     <option value="Aristotle_University_of_Thessaloniki">Aristotle University of Thessaloniki</option>
                 </select>
                 <div class="container">
-                    <div class="any_university">
-                        <input type="text" autocomplete="off" name="program_choice_manual" id="program_choice_manual" placeholder="Choose the name of a program i.e. Economics">
-                    </div>
                     <div class="National_and_Kapodistrian_University_of_Athens">
+                        <p style="padding-top: 10pt;"></p>
                         <select name="program_choice" id="program_choice">
                             <option value="" selected disabled hidden>Choose your program</option>
                             <option value="any">Any program</option>
@@ -35,6 +33,7 @@
                         </select>
                     </div>
                     <div class="National_Technical_University_of_Athens">
+                        <p style="padding-top: 10pt;"></p>
                         <select name="program_choice" id="program_choice">
                             <option value="" selected disabled hidden>Choose your program</option>
                             <option value="any">Any program</option>
@@ -43,6 +42,7 @@
                         </select>
                     </div>
                     <div class="Aristotle_University_of_Thessaloniki">
+                        <p style="padding-top: 10pt;"></p>
                         <select name="program_choice" id="program_choice">
                             <option value="" selected disabled hidden>Choose your program</option>
                             <option value="any">Any program</option>
@@ -63,11 +63,10 @@
                         }).trigger('change');
                     });
                 </script>
-                <p style="padding-top: 10px;"></p>
-                <input class="search_submit_button" type="submit" value="Search!">
-            </div>   
-        </form>
+                <p style="padding-top: 10pt;"></p>
+                <input class="filter_button" type="submit" value="Filter!">
+            </form>
+        </div>
     </div>
-        
     </body>
 {% endblock %}

@@ -6,21 +6,52 @@
 
 {% block main %}
     <body class="actual_container">
-    <div class="book_details_container">
+    <div class="search_details">
         <h1 class="main_title" style="padding-top: 30px">Detailed information for: {{ note_details[7] }}</h1>  <!--title-->
         <p style="padding-top: 30px"></p>
-        <div class="" style="padding: 30px;">
-            <p>Author: {{ note_details[22] }} </p>
+        <div class="main_info" style="padding: 30px;">
+            <p>Author: {{ note_details[23] }} </p>
             {# TODO: add a link which takes you to the Authors profile! #}
             <p>Upload date: {{ note_details[2] }}</p>
-            <p>Average rating: {{ average_review_score }}/5</p>
+            {% if average_review_score == "There are no reviews for these notes" %}
+                <p>Average rating: There are no reviews for these notes</p>  
+            {% endif %}
+            {% if average_review_score != "There are no reviews for these notes" %}
+                <p>Average rating: {{ average_review_score }}/5</p>
+            {% endif %}
             <p>Number of reviews received: {{ num_of_reviews }}</p>
             {# TODO: <p>Downloads: {{ advanced_details["books"][0]["work_ratings_count"] }}</p> #}
         </div>
-        <p style="padding-top: 30px"></p>
 
-        <h3 class="secondary_title">Submit a review</h3>
+        <p style="padding-top: 20px"></p>
+        <div class="buy_container">
+            <p style="padding-top: 20px"></p>
+            <button class="buy_button" onclick="alert('This feature is not ready yet!')">Buy these notes!</button>    
+        </div>
+
+        <p style="padding-top: 30px"></p>
+        <h3 class="main_title" style="font-size: 30pt;">Reviews from other people</h3>
+        <div class="other_reviews">
+            {% for review in reviews %}
+            <div class="individual_review">
+                <p>User "{{ review[4] }}" rated the notes with {{ review[5] }} /5.</p>
+                {# To say if the user has "bought" or "not bought" these specific notes #}
+                <p class="extra_info">{{ review[4] }} has {{ review[6] }} these specific notes!</p>
+
+                {# If the reviewer wrote a review.. include it #}
+                <div>
+                    {% if review[7] %}
+                        <p class="actual_review_text">"{{ review[7] }}"</p>  
+                    {% endif %} 
+                </div>
+                <p style="font-size:13pt">{{ review[3] }}</p>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <p style="padding-top: 21px"></p>
         <div class="fieldset_container">
+        <h3 class="main_title" style="font-size: 25pt;">Submit a review</h3>
         <fieldset>
             <form action="{{ url_for('note_details', note_id=note_details[0]) }}" method="POST">
                 <div class="choose_rating">
@@ -35,29 +66,10 @@
                     </select><br>
                 </div>
                 <p style="padding-top: 10px"></p>
-                <textarea name="opinion" placeholder="Write your book review here."rows="12" cols="30"></textarea><br>
+                <textarea name="opinion" placeholder="Write your book review here."rows="9" cols="30"></textarea><br>
                 <input class="submit_review_button" type="submit" value="Submit!">
             </form>
         </fieldset>
-        </div>
-        <p style="padding-top: 20px"></p>
-        <h3 class="secondary_title">Reviews from other people</h3>
-        <div class="other_reviews">
-            {% for review in reviews %}
-            <div class="individual_review">
-                <h5>User "{{ review[4] }}" rated the notes with {{ review[5] }} /5.</h5>
-                {# To say if the user has "bought" or "not bought" these specific notes #}
-                <p>{{ review[4] }} has {{ review[6] }} these specific notes!</p>
-
-                {# If the reviewer wrote a review.. include it #}
-                <div>
-                    {% if review[7] %}
-                        <p>"{{ review[7] }}"</p>  
-                    {% endif %} 
-                </div>
-                <p style="font-size:13pt">{{ review[3] }}</p>
-            </div>
-        {% endfor %}
         </div>
     </div>
     </body>

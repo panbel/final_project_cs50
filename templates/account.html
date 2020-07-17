@@ -5,9 +5,9 @@
 {% endblock %}
 
 {% block main %}
-    <body class="actual_container">
-        <h1>Account</h1>
-        <h2>Basic User Information</h2>
+    <body class="account_container">
+    <div class="account_container">
+        <p class="main_title">Account</p>
         {% if error %}
             <p class=error><strong></strong> {{ error }}</p>
         {% endif %}
@@ -15,7 +15,6 @@
         <button><a href="/edit-user-info/username">Change username</a></button></p>
         <p>Email: {{ g.user[2] }}
         <button><a href="/edit-user-info/email">Change email</a></button></p></p>        
-        <h3>Additional User Information</h3>
         <p>Gender: {{ user_info[1] }}
         <button><a href="/edit-user-info/gender">Change gender</a></button></p>
         <p>Age: {{ user_info[2] }}
@@ -34,7 +33,8 @@
         <button><a href="/edit-user-info/linkdin">Change Linkdin</a></button></p>
         <p>Contact Email: {{ user_info[9] }}
         <button><a href="/edit-user-info/contact_email">Change contact email</a></button></p>
-        <h1>View and edit the notes you have uploaded</h1>
-        <button><a href={{ url_for("view_uploads") }}> View and edit your notes!</a></button>
+        <p style="padding-top: 10px;"></p>
+        <button class="special_button"><a href="{{ url_for('view_uploads') }}"> View and edit your notes!</a></button>
+    </div>
     </body>
 {% endblock %}

@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block title %}
+: Leaderoard
+{% endblock %}
+
+{% block main %}
+    <body class="actual_container">
+    <div class="leaderboard_results_container">
+        <h1 class="main_title" style="padding-top: 20px">Leaderboard</h1>
+        {% if not leaderboard_data %}
+            <h4>Unfortunately nothing matches your filter criteria.</h4>
+            <button><a href="/leaderboard_filter">Go back</a></button>
+        {% endif %}
+        <ol class="">
+        {% for person in leaderboard_data %}
+            <li class="individual_profile"><a href="{{ url_for('view_profile', user_id=person[0]) }}">{{ person[1] }}</a></p><p class="small_text">{{ person[1] }} has uploaded {{ person[4] }} files and has an average score of {{ person[2] }}/5 from {{person[3] }} reviews.</p></li>
+        {% endfor %}
+        </ol>
+    </div>
+    </body>
+{% endblock %}

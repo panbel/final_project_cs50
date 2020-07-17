@@ -17,6 +17,7 @@ UPLOAD_FOLDER = ""
 uni_choice = ""
 program_choice = ""
 note_title = ""
+note_price = ""
 user_info = ""
 error_from_other_page = ""
 app = Flask(__name__)
@@ -48,6 +49,7 @@ def before_request():  # Had to import g from flask. It creates a global variabl
         g.user = user
 
 @app.route("/")
+# No login required
 def index():
     return render_template("index.html")
 
@@ -111,10 +113,15 @@ def login():
                 error = "Wrong password"
             else:
                 error = "You were sucesfully logged in!"
-                print(input_check)
                 user_id = input_check[0]
                 session["user_id"] = user_id # Not sure if I need this here
-                print(session["user_id"])
+                # print(session["user_id"])
+                check = db.execute("SELECT user_id FROM user_info WHERE user_id = ?", (user_id,)).fetchone()
+                print(check)
+                if check is None:
+                    db.execute("INSERT INTO user_info (user_id) VALUES (?)", (user_id,))
+                    conn.commit()
+                print(g.user)
                 return render_template('home.html', error=error)
                 # return redirect(url_for('search', error=error))
         return render_template('login.html', error=error)
@@ -124,7 +131,7 @@ def login():
 
 
 @app.route("/home")
-# No login required
+# Login is not required
 def home():
     return render_template("home.html")
 
@@ -136,14 +143,19 @@ def sell():
     global uni_choice
     global program_choice
     global note_title
+    global note_price
     if request.method == "GET":
         return render_template("sell.html")
     else:
         uni_choice = request.form.get("uni_choice")
+        note_price = request.form.get("note_price")
         program_choice = request.form.get("program_choice")
         note_title = request.form.get("note_title")
         if program_choice is None:
-            error = "You must choose a program before clicking 'Next'"
+            error = "You must choose a program before clicking 'Next!'"
+            return render_template("sell.html", error=error)
+        elif note_price is None:
+            error = "You must choose a price for your notes before clicking 'Next!'"
             return render_template("sell.html", error=error)
         elif not note_title:
             error = "You must choose a title for your notes! Users can search for you notes by it's title so try to give a meaningful one."
@@ -183,8 +195,9 @@ def upload_file():
             global uni_choice
             global program_choice
             global note_title
+            global note_price
             app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-            db.execute("INSERT INTO notes_uploaded (uploader_id, filename, university, program, title) VALUES (?, ?, ?, ?, ?)", (g.user[0], full_filename, uni_choice, program_choice, note_title,))
+            db.execute("INSERT INTO notes_uploaded (uploader_id, filename, university, program, title, price) VALUES (?, ?, ?, ?, ?, ?)", (g.user[0], full_filename, uni_choice, program_choice, note_title, note_price,))
             conn.commit()
             last_id = db.execute("SELECT last_insert_rowid()").fetchone()  # Returns a tuple (3,)
             # path_of_note = app.config['UPLOAD_FOLDER']
@@ -292,6 +305,7 @@ def edit_variable(variable):
 
 @app.route("/search", methods=("GET", "POST"))
 # No login required
+# Todo: Have an option to sort by date added, downloads, avg review score
 def search():
     if request.method == "GET":
         return render_template("search.html")
@@ -412,12 +426,46 @@ def note_query(query):
 
 
 @app.route("/view_profile/<user_id>")
-@login_required
 def view_profile(user_id):
-    pass
-# Todo: allow people to view someones profile
+    user_info = db.execute("SELECT * FROM user_info WHERE user_id = ?", (user_id,)).fetchone()
+    notes_info = db.execute("SELECT note_id, upload_time, filename, university, program, title FROM notes_uploaded WHERE uploader_id = ?", (user_id,)).fetchall()
+    number_of_notes_uploaded = len(notes_info)
+    reviews_info = db.execute("SELECT ROUND(AVG(reviews.review_score), 2), COUNT(review_id) FROM reviews WHERE note_owner_id = ?", (user_id,)).fetchone()
+    print(f"average review score = {reviews_info[0]}")
+    print(f"number of reviews = {reviews_info[1]}")
+    return render_template("view_profile.html", user_info=user_info, notes_info=notes_info, reviews_info=reviews_info, number_of_notes_uploaded=number_of_notes_uploaded)
 # Todo: allow people to upload a picture
-# Todo: Make a leaderboard with all the notes sellers
+
+
+@app.route("/search_profile", methods=("POST", "GET"))
+def search_profile():
+    if request.method == "GET":
+        return render_template("search_profile.html")
+    else:
+        profile_name = request.form.get("profile_name")
+        print(f"profile_name: {profile_name}")
+
+        # If the user did not submit any search criteria
+        if not profile_name:
+            query = db.execute("""SELECT users.user_id, user_info.full_name FROM user_info INNER JOIN 
+                                users ON user_info.user_id = users.user_id""").fetchall()
+            print(query)
+            print("case1")
+            return render_template("profile_query.html", query = query)  #redirect(url_for("book_query", query = query)) WORKED!
+            # Todo: Have two more input fields for uni and program and then the query can have a "LIKE" condition (e.g. athens or Economcis)
+
+        # If a name was given
+        else:
+            query = db.execute("""SELECT users.user_id, user_info.full_name FROM users INNER JOIN 
+                            user_info ON user_info.user_id = users.user_id WHERE user_info.full_name LIKE ?""", ('%'+profile_name+'%',)).fetchall() 
+            print(query)
+            print("case2")
+            return render_template("profile_query.html", query = query)
+
+
+@app.route("/profile_query")
+def profile_query():
+    return render_template("profile_query.html")
 
 
 @app.route("/note_details/<note_id>", methods=("POST", "GET"))
@@ -437,29 +485,108 @@ def note_details(note_id):
         sum_of_scores += review[5]
         num_of_reviews += 1
     getcontext().prec = 2
-    average_review_score = Decimal(sum_of_scores) / Decimal(num_of_reviews)
+    if num_of_reviews != 0:
+        average_review_score = Decimal(sum_of_scores) / Decimal(num_of_reviews)
+    else: 
+        average_review_score = "There are no reviews for these notes"
     print(average_review_score)
 
     if request.method == "GET":
         reviews = db.execute("SELECT * FROM reviews WHERE note_id=?", (note_id,)).fetchall()
         return render_template("note_details.html", note_details = note_details, reviews = reviews, average_review_score=average_review_score, num_of_reviews=num_of_reviews)
 
-
     # If the user submitted a review
     else:
-        pass
         # First need to check if a review had already been submitted by this user for this book
         check = db.execute("SELECT * FROM reviews WHERE note_id=? AND reviewer_id=?", (note_id, g.user[0],)).fetchall()
-        print(f"Post check {check}")
         if len(check) == 0:
             # Todo: dynamically check if the user has bought or not bought the review.. I have hardcoded "not bought" for now
-            db.execute("INSERT INTO reviews (note_id, reviewer_id, username, review_score, bought, opinion) VALUES (?,?,?,?,?,?)", (note_id, g.user[0], g.user[1], request.form.get('rating'), "not bought", request.form.get("opinion")))
+            note_owner_id = db.execute("SELECT uploader_id FROM notes_uploaded WHERE note_id = ?", (note_id,)).fetchone()
+            db.execute("INSERT INTO reviews (note_id, reviewer_id, username, review_score, bought, opinion, note_owner_id) VALUES (?,?,?,?,?,?,?)", (note_id, g.user[0], g.user[1], request.form.get('rating'), "not bought", request.form.get("opinion"), note_owner_id[0]))
             conn.commit()
             error = "Your review was submitted succesfully!"
             return render_template("search.html", error = error)
         else:
             error = "You have already submitted a review for this book. Only one is allowed."
             return render_template("search.html", error = error)
+
+
+@app.route("/leaderboard_filter", methods=("GET", "POST"))
+# No login required
+# Todo: have an option to sort by popularity or average review score
+def leaderboard_filter():
+    if request.method == "GET":
+        return render_template("leaderboard_filter.html")
+    else:
+        uni_choice = request.form.get("uni_choice")  # When left empty the output is None
+        program_choice = request.form.get("program_choice")  # When left empty the output is None
+        print(f"uni_choice: {uni_choice}")  
+        print(f"program_choice: {program_choice}")
+
+        # If the only option was "Any university" or if the unichoice is none
+        if uni_choice == "any" or uni_choice is None:
+            query = db.execute("""SELECT users.user_id, user_info.full_name, ROUND(AVG(reviews.review_score), 2) FROM reviews INNER JOIN 
+                            users ON users.user_id = reviews.reviewer_id INNER JOIN     
+                            notes_uploaded ON notes_uploaded.uploader_id = reviews.note_owner_id INNER JOIN
+                            user_info ON users.user_id = user_info.user_id GROUP BY 
+                            reviews.note_owner_id ORDER BY AVG(reviews.review_score) DESC""").fetchall()
+            leaderboard_data = []
+            number_of_reviews = 0
+            for person in query:
+                number_of_reviews = db.execute("SELECT COUNT(review_score) FROM reviews WHERE note_owner_id = ?", (person[0],)).fetchone()
+                number_of_notes_uploaded = db.execute("SELECT COUNT(note_id) FROM notes_uploaded WHERE uploader_id = ?", (person[0],)).fetchone()
+                person = list(person)
+                person.append(number_of_reviews[0])
+                person.append(number_of_notes_uploaded[0])
+                leaderboard_data.append(tuple(person))
+            print(leaderboard_data)
+            print("case1")
+            return render_template("leaderboard.html", leaderboard_data = leaderboard_data)  #redirect(url_for("book_query", query = query)) WORKED!
+
+        # If a specific university has been selected
+        else:
+            # If no program is specified
+            if program_choice is None or program_choice == "any":
+                print("case2")
+                query = db.execute("""SELECT users.user_id, user_info.full_name, ROUND(AVG(reviews.review_score), 2) FROM reviews INNER JOIN 
+                            users ON users.user_id = reviews.reviewer_id INNER JOIN     
+                            notes_uploaded ON notes_uploaded.uploader_id = reviews.note_owner_id INNER JOIN
+                            user_info ON users.user_id = user_info.user_id GROUP BY 
+                            reviews.note_owner_id HAVING notes_uploaded.university = ? ORDER BY AVG(reviews.review_score) DESC""", (uni_choice,)).fetchall()
+                leaderboard_data = []
+                number_of_reviews = 0
+                for person in query:
+                    number_of_reviews = db.execute("SELECT COUNT(review_score) FROM reviews WHERE note_owner_id = ?", (person[0],)).fetchone()
+                    number_of_notes_uploaded = db.execute("SELECT COUNT(note_id) FROM notes_uploaded WHERE uploader_id = ?", (person[0],)).fetchone()
+                    person = list(person)
+                    person.append(number_of_reviews[0])
+                    person.append(number_of_notes_uploaded[0])
+                    leaderboard_data.append(tuple(person))
+                return render_template("leaderboard.html", leaderboard_data = leaderboard_data)
+
+            # If a program is specified
+            else:
+                print("case3")
+                query = db.execute("""SELECT users.user_id, user_info.full_name, ROUND(AVG(reviews.review_score), 2) FROM reviews INNER JOIN 
+                            users ON users.user_id = reviews.reviewer_id INNER JOIN     
+                            notes_uploaded ON notes_uploaded.uploader_id = reviews.note_owner_id INNER JOIN
+                            user_info ON users.user_id = user_info.user_id GROUP BY 
+                            reviews.note_owner_id HAVING notes_uploaded.university = ? AND notes_uploaded.program = ? ORDER BY AVG(reviews.review_score) DESC""", (uni_choice, program_choice,)).fetchall()
+                leaderboard_data = []
+                number_of_reviews = 0
+                for person in query:
+                    number_of_reviews = db.execute("SELECT COUNT(review_score) FROM reviews WHERE note_owner_id = ?", (person[0],)).fetchone()
+                    number_of_notes_uploaded = db.execute("SELECT COUNT(note_id) FROM notes_uploaded WHERE uploader_id = ?", (person[0],)).fetchone()
+                    person = list(person)
+                    person.append(number_of_reviews[0])
+                    person.append(number_of_notes_uploaded[0])
+                    leaderboard_data.append(tuple(person))
+                return render_template("leaderboard.html", leaderboard_data = leaderboard_data)
+                    
+
+@app.route("/leaderboard")
+def leaderboard():
+    return render_template("leaderboard.html")
 
 
 @app.route("/logout")

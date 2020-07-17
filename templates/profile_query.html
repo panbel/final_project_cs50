@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block title %}
+: Profile Results
+{% endblock %}
+
+{% block main %}
+    <body class="actual_container">
+    <div class="profile_query_container">
+        <p class="main_title" style="padding-top: 20px">Profile Results</p>
+        {% if not query %}
+            <h4>Unfortunately nothing matches your filter criteria.</h4>
+            <button class="go_back_button"><a href="/search_profile">Go back</a></button>
+        {% endif %}
+        <ol class="main_info">
+        {% for profile in query %}
+            <li class="query_item">
+                <a href="{{ url_for('view_profile', user_id=profile[0]) }}">{{ profile[1] }}</a>
+            </li>
+        {% endfor %}
+        </ol>
+    </div>
+    </body>
+{% endblock %}

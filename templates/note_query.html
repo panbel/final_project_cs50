@@ -6,18 +6,15 @@
 
 {% block main %}
     <body class="actual_container">
-    <div class="">
+    <div class="search_results">
         <h1 class="main_title" style="padding-top: 20px">Search Results</h1>
         <ol class="query_list">
-        {% for note in query %}
-            <li class="query_item">
-                <a href="{{ url_for('note_details', note_id=note[0]) }}"><h5>{{ note[7] }}</h5></a>
-                <p>Uploaded by {{ note[22] }} on {{ note[2] }}</p>
-
-                {# <a href="{{ url_for('note_details', note_title=note[1]) }}">{{ note[1] }}</a> #}
-
-            </li>
-        {% endfor %}
+            {% for note in query %}
+                <li class="query_item">
+                    <a href="{{ url_for('note_details', note_id=note[0]) }}">{{ note[7] }}</a>
+                    <p>Uploaded by {{ note[23] }} on {{ note[2] }}</p>
+                </li>
+            {% endfor %}
         </ol>
     </div>
     </body>
