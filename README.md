@@ -1,5 +1,5 @@
 # final_project_cs50
-The website allows people to buy and sell study notes. What is special about this website is the "Leaderboard" feature which, to the best of my knowledge, does not exist on other similar websites. It allows people to search for sellers of apps and sorts them via certain criteria (such as average review score). Then, it is possible to view a seller's profile which includes their social media (if they choose to have them public) as well as their contact email. This way, it is possible to contact notes of sellers directly and organize one-on-one tutorials or even ask them questions about their notes directly.
+The website allows people to buy and sell study notes. What is special about this website is the "Leaderboard" feature. It allows people to search for sellers of apps and sorts them via certain criteria (such as average review score). Then, it is possible to view a seller's profile which includes their social media (if they choose to have them public) as well as their contact email. This way, it is possible to contact notes of sellers directly and organize one-on-one tutorials or even ask them questions about their notes directly.
 
 Rising to the top of the Leaderboards can incentivize sellers to not only charge a low price, but also, to increase the quality of their notes.
 
